@@ -6,6 +6,8 @@ import {
   ANALYZE_COMMENT_TXT_PATH,
 } from "./constants.mjs";
 
+const BUDGET_PERCENT_INCREASE_RED = 0.2;
+
 const currentBundle = JSON.parse(
   await fs.readFile(BUNDLE_ANALYSIS_PATH, "utf-8")
 );
@@ -80,20 +82,63 @@ function printTable(data, isDifferenceTable = false) {
     if (isDifferenceTable) {
       tableText +=
         "| " +
-        prettyBytes(self.size) +
-        (isNew
-          ? " "
-          : "(" + prettyBytes(self.diff, { signed: true }) + ")" + " ");
+        printSizeWithDiff(self.size, self.diff, isNew, /* isSelf */ true) +
+        " ";
       tableText +=
         "| " +
-        prettyBytes(all.size) +
-        (isNew
-          ? " |\n"
-          : "(" + prettyBytes(all.diff, { signed: true }) + ")" + " |\n");
+        printSizeWithDiff(all.size, all.diff, isNew, /* isSelf */ false) +
+        " |\n";
     } else {
       tableText += "| " + prettyBytes(self) + " ";
       tableText += "| " + prettyBytes(all) + " |\n";
     }
   }
   return tableText;
+}
+
+function printSizeWithDiff(size, diff, isNew, isSelf) {
+  let res = "";
+  res += prettyBytes(size);
+  if (!isNew) {
+    res +=
+      " (" +
+      printStatusIndicator(size, diff) +
+      " " +
+      prettyBytes(diff, { signed: true }) +
+      ")";
+  } else if (isNew && isSelf && printStatusIndicatorForNewPage(size)) {
+    res += " ( " + printStatusIndicatorForNewPage(size) + " )";
+  }
+  return res;
+}
+
+function printStatusIndicator(size, diff) {
+  let res = "";
+  const percentageChange = diff / size;
+  if (percentageChange > 0 && percentageChange < BUDGET_PERCENT_INCREASE_RED) {
+    res += "🟡";
+  } else if (percentageChange >= BUDGET_PERCENT_INCREASE_RED) {
+    res += "🔴";
+  } else if (percentageChange < 0.01 && percentageChange > -0.01) {
+    res += "";
+  } else {
+    res += "🟢";
+  }
+  return res;
+}
+
+function printStatusIndicatorForNewPage(size) {
+  let res = "";
+  if (
+    // 10kb
+    size > 10000
+  ) {
+    res += "🔴";
+  } else if (
+    // 7kb
+    size > 7000
+  ) {
+    res += "🟡";
+  }
+  return res;
 }
