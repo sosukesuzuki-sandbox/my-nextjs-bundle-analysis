@@ -103,42 +103,36 @@ function printSizeWithDiff(size, diff, isNew, isSelf) {
     res +=
       " (" +
       printStatusIndicator(size, diff) +
-      " " +
+      "" +
       prettyBytes(diff, { signed: true }) +
       ")";
   } else if (isNew && isSelf && printStatusIndicatorForNewPage(size)) {
-    res += " ( " + printStatusIndicatorForNewPage(size) + " )";
+    res += " (" + printStatusIndicatorForNewPage(size) + ")";
   }
   return res;
 }
 
 function printStatusIndicator(size, diff) {
-  let res = "";
   const percentageChange = diff / size;
-  if (percentageChange > 0 && percentageChange < BUDGET_PERCENT_INCREASE_RED) {
-    res += "🟡";
-  } else if (percentageChange >= BUDGET_PERCENT_INCREASE_RED) {
-    res += "🔴";
-  } else if (percentageChange < 0.01 && percentageChange > -0.01) {
-    res += "";
-  } else {
-    res += "🟢";
+  if (percentageChange >= BUDGET_PERCENT_INCREASE_RED) {
+    return " 🔴 ";
+  } else if (percentageChange < 0) {
+    return " 🟢 ";
   }
-  return res;
+  return "";
 }
 
 function printStatusIndicatorForNewPage(size) {
-  let res = "";
   if (
     // 10kb
     size > 10000
   ) {
-    res += "🔴";
+    return " 🔴 ";
   } else if (
     // 7kb
     size > 7000
   ) {
-    res += "🟡";
+    return " 🟡 ";
   }
-  return res;
+  return "";
 }
