@@ -34,6 +34,7 @@ for (const [page, { self, all }] of Object.entries(currentBundle)) {
       },
     };
   } else {
+    delete currentBundle[page];
     difference[page] = {
       isNew: true,
       self: {
