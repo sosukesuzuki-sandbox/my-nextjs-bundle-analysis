@@ -15,21 +15,35 @@ const baseBundle = JSON.parse(
 
 const difference = {};
 for (const [page, { self, all }] of Object.entries(currentBundle)) {
-  const { self: baseSelf, all: baseAll } = baseBundle[page];
-  if (self === baseSelf && all === baseAll) {
-    continue;
+  const pageFromBaseBundle = baseBundle[page];
+  if (pageFromBaseBundle) {
+    const { self: baseSelf, all: baseAll } = pageFromBaseBundle;
+    if (self === baseSelf && all === baseAll) {
+      continue;
+    }
+    delete currentBundle[page];
+    difference[page] = {
+      isNew: false,
+      self: {
+        diff: self - baseSelf,
+        size: self,
+      },
+      all: {
+        diff: all - baseAll,
+        size: all,
+      },
+    };
+  } else {
+    difference[page] = {
+      isNew: true,
+      self: {
+        size: self,
+      },
+      all: {
+        size: all,
+      },
+    };
   }
-  delete currentBundle[page];
-  difference[page] = {
-    self: {
-      diff: self - baseSelf,
-      size: self,
-    },
-    all: {
-      diff: all - baseAll,
-      size: all,
-    },
-  };
 }
 
 let textData = "<!-- __NEXTJS_BUNDLE -->\n";
@@ -56,23 +70,25 @@ function printTable(data, isDifferenceTable = false) {
   let tableText = "";
   tableText += "| Page | Size | First Load JS |\n";
   tableText += "|------|------|---------------|\n";
-  for (const [page, { self, all }] of Object.entries(data)) {
-    tableText += "| `" + page + "` ";
+  for (const [page, { self, all, isNew }] of Object.entries(data)) {
+    tableText += "| `" + page + "`";
+    if (isNew) {
+      tableText += " (New)";
+    }
+    tableText += " ";
     if (isDifferenceTable) {
       tableText +=
         "| " +
         prettyBytes(self.size) +
-        "(" +
-        prettyBytes(self.diff, { signed: true }) +
-        ")" +
-        " ";
+        (isNew
+          ? " "
+          : "(" + prettyBytes(self.diff, { signed: true }) + ")" + " ");
       tableText +=
         "| " +
         prettyBytes(all.size) +
-        "(" +
-        prettyBytes(all.diff, { signed: true }) +
-        ")" +
-        " |\n";
+        (isNew
+          ? " |\n"
+          : "(" + prettyBytes(all.diff, { signed: true }) + ")" + " |\n");
     } else {
       tableText += "| " + prettyBytes(self) + " ";
       tableText += "| " + prettyBytes(all) + " |\n";
