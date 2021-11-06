@@ -52,10 +52,14 @@ for (const [page, { self, all }] of Object.entries(currentBundle)) {
 let textData = "<!-- __NEXTJS_BUNDLE -->\n";
 textData += "# バンドルサイズ\n\n";
 textData += "## 差があったページ\n\n";
-textData +=
-  Object.keys(difference).length === 0
-    ? "なし\n"
-    : printTable(difference, true);
+if (Object.keys(difference).length === 0) {
+  textData += "なし\n";
+} else {
+  textData += "<details open><summary>詳細</summary>\n\n";
+  textData += printTable(difference, true);
+  textData += "\n";
+  textData += "</details>\n";
+}
 textData += "\n";
 textData += "## その他のページ\n\n";
 if (Object.keys(currentBundle).length === 0) {
