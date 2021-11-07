@@ -52,23 +52,51 @@ for (const [page, { self, all }] of Object.entries(currentBundle)) {
   }
 }
 
+const littleDifference = {};
+for (const [page, { self, all }] of Object.entries(difference)) {
+  if (!self.diff && !all.diff) {
+    continue;
+  }
+  if (Math.abs(self.diff) < 1000 && Math.abs(all.diff) < 1000) {
+    delete difference[page];
+    littleDifference[page] = {
+      isNew: false,
+      self,
+      all,
+    };
+  }
+}
+
 let textData = "<!-- __NEXTJS_BUNDLE -->\n";
 textData += "# :notebook_with_decorative_cover: Next.js Bundle Analysis\n\n";
+
 textData += "## Pages Changed Size\n\n";
 if (Object.keys(difference).length === 0) {
   textData += "Nothing\n";
 } else {
-  textData += "<details open><summary>詳細</summary>\n\n";
+  textData += "<details open><summary>Details</summary>\n\n";
   textData += printTable(difference, true);
   textData += "\n";
   textData += "</details>\n";
 }
 textData += "\n";
+
+textData += "## Pages Changed Size (less than 1kb)\n\n";
+if (Object.keys(littleDifference).length === 0) {
+  textData += "Nothing\n";
+} else {
+  textData += "<details><summary>Details</summary>\n\n";
+  textData += printTable(littleDifference, true);
+  textData += "\n";
+  textData += "</details>\n";
+}
+textData += "\n";
+
 textData += "## Other Pages\n\n";
 if (Object.keys(currentBundle).length === 0) {
   textData += "Nothing\n";
 } else {
-  textData += "<details><summary>詳細</summary>\n\n";
+  textData += "<details><summary>Details</summary>\n\n";
   textData += printTable(currentBundle);
   textData += "\n";
   textData += "</details>\n";
