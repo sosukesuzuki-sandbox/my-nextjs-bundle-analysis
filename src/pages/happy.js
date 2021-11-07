@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import zxcvbn from "zxcvbn";
 
 export default function () {
   useEffect(() => {
-    console.log(zxcvbn);
+    console.log();
   }, []);
   return <h1>Happy Website</h1>;
 }
