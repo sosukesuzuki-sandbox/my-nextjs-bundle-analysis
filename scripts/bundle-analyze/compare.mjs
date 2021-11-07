@@ -53,8 +53,8 @@ for (const [page, { self, all }] of Object.entries(currentBundle)) {
 }
 
 let textData = "<!-- __NEXTJS_BUNDLE -->\n";
-textData += "# バンドルサイズ\n\n";
-textData += "## 差があったページ\n\n";
+textData += "# :notebook_with_decorative_cover: Next.js Bundle Analysis\n\n";
+textData += "## Pages Changed Size\n\n";
 if (Object.keys(difference).length === 0) {
   textData += "なし\n";
 } else {
@@ -64,7 +64,7 @@ if (Object.keys(difference).length === 0) {
   textData += "</details>\n";
 }
 textData += "\n";
-textData += "## その他のページ\n\n";
+textData += "## Other Pages\n\n";
 if (Object.keys(currentBundle).length === 0) {
   textData += "なし\n";
 } else {
