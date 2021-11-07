@@ -9,7 +9,6 @@ import {
 
 const require = createRequire(import.meta.url);
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires -- CJS で export されてるから
 const { getJsPageSizeInKb } = require("next/dist/build/utils");
 
 const buildManifest = JSON.parse(await fs.readFile(BUILD_MANIFEST_PATH));
