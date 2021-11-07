@@ -4,9 +4,12 @@ import {
   BUNDLE_ANALYSIS_PATH,
   BASE_BUNDLE_ANALYSIS_PATH,
   ANALYZE_COMMENT_TXT_PATH,
-} from "./constants.mjs";
-
-const BUDGET_PERCENT_INCREASE_RED = 0.2;
+} from "./paths.mjs";
+import {
+  BUDGET_PERCENT_INCREASE_RED,
+  BUDGET_SIZE_NEW_PAGE_RED,
+  BUDGET_SIZE_NEW_PAGE_YELLOW,
+} from "./budgets.mjs";
 
 const currentBundle = JSON.parse(
   await fs.readFile(BUNDLE_ANALYSIS_PATH, "utf-8")
@@ -129,12 +132,12 @@ function printStatusIndicator(size, diff) {
 function printStatusIndicatorForNewPage(size) {
   if (
     // 10kb
-    size > 10000
+    size > BUDGET_SIZE_NEW_PAGE_RED
   ) {
     return " 🔴 ";
   } else if (
     // 7kb
-    size > 7000
+    size > BUDGET_SIZE_NEW_PAGE_YELLOW
   ) {
     return " 🟡 ";
   }

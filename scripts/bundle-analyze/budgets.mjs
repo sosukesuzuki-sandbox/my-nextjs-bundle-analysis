@@ -1,0 +1,4 @@
+export const BUDGET_PERCENT_INCREASE_RED = 0.2;
+
+export const BUDGET_SIZE_NEW_PAGE_RED = 10000;
+export const BUDGET_SIZE_NEW_PAGE_YELLOW = 7000;

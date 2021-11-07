@@ -5,7 +5,7 @@ import {
   BUILD_MANIFEST_PATH,
   ANALYZE_DIR_PATH,
   BUNDLE_ANALYSIS_PATH,
-} from "./constants.mjs";
+} from "./paths.mjs";
 
 const require = createRequire(import.meta.url);
 
