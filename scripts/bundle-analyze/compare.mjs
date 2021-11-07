@@ -56,7 +56,7 @@ let textData = "<!-- __NEXTJS_BUNDLE -->\n";
 textData += "# :notebook_with_decorative_cover: Next.js Bundle Analysis\n\n";
 textData += "## Pages Changed Size\n\n";
 if (Object.keys(difference).length === 0) {
-  textData += "なし\n";
+  textData += "Nothing\n";
 } else {
   textData += "<details open><summary>詳細</summary>\n\n";
   textData += printTable(difference, true);
@@ -66,7 +66,7 @@ if (Object.keys(difference).length === 0) {
 textData += "\n";
 textData += "## Other Pages\n\n";
 if (Object.keys(currentBundle).length === 0) {
-  textData += "なし\n";
+  textData += "Nothing\n";
 } else {
   textData += "<details><summary>詳細</summary>\n\n";
   textData += printTable(currentBundle);
